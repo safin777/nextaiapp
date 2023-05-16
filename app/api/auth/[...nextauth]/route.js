@@ -34,7 +34,7 @@ const handler = NextAuth({
           await User.create({
             email: profile.email,
             name: profile.name.replace(" ", "").toLowerCase(),
-            image: profile.image,
+            image: profile.picture,
           });
         }
         //check if the user already exists in the database

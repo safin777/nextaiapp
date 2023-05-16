@@ -10,7 +10,6 @@ const Nav = () => {
   const [toggleDropdown, setToggleDropdown] = useState(false);
 
   const handleDropdown = () => {
-    console.log("clicked");
     setToggleDropdown((prev) => !prev);
   };
 
