@@ -10,6 +10,9 @@ const PromptCard = ({ post, handleTagClick, handleDelete, handleEdit }) => {
 // All the state change functions are here:
 
   const [copied, setCopied] = useState("");
+  const { data: session } = useSession("");
+  const pathName  = usePathname();
+  const router = useRouter();
   
   const handleCopy = () =>{
     navigator.clipboard.writeText(post.prompt);
@@ -69,6 +72,18 @@ const PromptCard = ({ post, handleTagClick, handleDelete, handleEdit }) => {
       <p className="text-sm cursor-pointer font-inter blue_gradient" onClick={()=> handleTagClick && handleTagClick(post.tag)}>
         {post.tag}
       </p>
+
+      {
+        session?.user.id === post.creator._id && pathName === '/profile' && (<div className="gap-4 pt-3 mt-5 font-bold border-t border-gray-400 flex-center">
+              <p className="text-sm cursor-pointer font-inter green_gradient" onClick={handleEdit}>
+                Edit
+              </p>
+
+              <p className="text-sm cursor-pointer font-inter orange_gradient" onClick={handleDelete}>
+                Delete
+              </p>
+          </div>)
+      }
     </div>
   );
 };

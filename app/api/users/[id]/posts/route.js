@@ -3,14 +3,13 @@ import Prompt from "@models/prompt";
 
 export const GET = async (request, { params }) => {
   try {
-    await connectToDB();
-    const prompts = await Prompt.find({
-      creator: params.id
-    }).populate("creator");
-    return new Response(JSON.stringify(prompts), {
-      status: 200,
+    await connectToDB()
+    const prompts = await Prompt.find({ creator: params.id }).populate("creator")
+    return new Response(JSON.stringify(prompts),{
+      status: 200
     });
-  } catch (error) {
+  } 
+  catch (error) {
     return new Response(JSON.stringify("Failed to Fetch post data"), {
       status: 500,
     });

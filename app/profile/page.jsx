@@ -4,26 +4,30 @@ import { useState, useEffect } from "react";
 import Profile from "@components/Profile";
 
 const MyProfile = () => {
-  const { data: session } = useSession();
+  const { data: session } = useSession('');
+  
   const handleEdit = () => {};
   const handleDelete = async () => {};
-  const [posts, setMyPosts] = useState([]); // [{}
+
+
+  
+  const [posts, setPosts] = useState([]); // [{}
 
   useEffect(() => {
     const fetchPosts = async () => {
-      const response = await fetch(`/api/users/${session?.user.id}/posts}`);
-      console.log(response);
+      
+      const response = await fetch(`/api/users/${session?.user.id}/posts`);
       const data = await response.json();
-      setMyPosts(data);
+      setPosts(data);
     };
     if (session?.user.id) {
-      fetchPosts();
-    }
-  }, []);
 
+      fetchPosts()
+    }
+  },[session?.user.id]);
   return (
     <Profile
-      name="My"
+      name={session?.user.name.slice(0,12) || "User"}
       desc="Welcome to my profile!"
       data={posts}
       handleEdit={handleEdit}
