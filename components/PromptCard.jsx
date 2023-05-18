@@ -70,7 +70,7 @@ const PromptCard = ({ post, handleTagClick, handleDelete, handleEdit }) => {
         {post.prompt}
       </p>
       <p className="text-sm cursor-pointer font-inter blue_gradient" onClick={()=> handleTagClick && handleTagClick(post.tag)}>
-        {post.tag}
+        { (post.tag).includes('#') ? post.tag : "#" + post.tag }
       </p>
 
       {
