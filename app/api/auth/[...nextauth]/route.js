@@ -2,7 +2,6 @@
 
 import NextAuth from "next-auth/next";
 import GoogleProvider from "next-auth/providers/google";
-import { signIn } from "next-auth/react";
 import { connectToDB } from "@utils/database";
 import User from "@models/user";
 
@@ -21,10 +20,8 @@ const handler = NextAuth({
       return session;
     },
 
-    async signIn({ profile }) {
-      //serverless lambda function ->dynamodb
-      //profile is the data that we get from google
-      // console.log(profile);
+    async signIn( {profile} ) {
+  
       try {
         await connectToDB();
 
