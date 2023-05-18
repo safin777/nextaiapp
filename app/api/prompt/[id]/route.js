@@ -1,4 +1,4 @@
-import connectDB from "utils/connectDB";
+import {connectToDB} from "utils/database";
 import Prompt from "models/prompt";
 
 //GET
@@ -27,9 +27,10 @@ export const GET = async (request, { params }) => {
 
 export const PATCH = async (request, { params }) => {
   const { prompt, tag } = await request.json();
+  console.log(prompt, tag);
   try {
     await connectToDB();
-    const existingPrompt = await Prompt.findByI(params.id);
+    const existingPrompt = await Prompt.findById(params.id);
     if (!existingPrompt) {
       return new Response(JSON.stringify("Prompt not found"), {
         status: 404,
