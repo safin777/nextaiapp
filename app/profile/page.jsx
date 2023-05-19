@@ -44,7 +44,7 @@ const MyProfile = () => {
   }, [session?.user.id]);
   return (
     <Profile
-      name={session?.user.name.slice(0, 12) || "User"}
+      name={session?.user.name || "User"}
       desc="Welcome to my profile!"
       data={posts}
       handleEdit={handleEdit}
