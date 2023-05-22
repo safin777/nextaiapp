@@ -7,7 +7,7 @@ import PromptCard from "./PromptCard";
 
 const PromptCardList = ({ data, handleTagClick }) => {
   return (
-    <div className='mt-16 prompt_layout'>
+    <div className="mt-16 prompt_layout">
       {data.map((post) => (
         <PromptCard
           key={post._id}
@@ -21,18 +21,53 @@ const PromptCardList = ({ data, handleTagClick }) => {
 
 const Feed = () => {
   const [searchText, setSearchText] = useState("");
-  const [posts,setPosts] = useState([]); // [{}
-  const handleSearchChange = (e) => {};
+  const [posts, setPosts] = useState([]); // [{}
+  const [serchTimeOut, setSearchTimeOut] = useState(null);
+  const [searchedResults, setSearchedResults] = useState("");
+
+  const handleSearchChange = (e) => {
+    clearTimeout(serchTimeOut);
+    setSearchText(e.target.value);
+
+    setSearchTimeOut(
+      setTimeout(() => {
+        const searchResult = filterPrompts(e.target.value);
+        setSearchedResults(searchResult);
+      }, 500)
+    );
+  };
+
+  // filter with regex
+
+  const filterPrompts = (searchText) => {
+    const regex = new RegExp(searchText, "i");
+    return posts.filter(
+      (post) =>
+        post.prompt.match(regex) ||
+        post.creator.name.match(regex) ||
+        post.tag.match(regex)
+    );
+  };
+
+  //handle tag click
+
+  const handleTagClick = (tagName) => {
+    setSearchText(tagName);
+
+    const searchResult = filterPrompts(tagName);
+    setSearchedResults(searchResult);
+  };
+  
+  const fetchPosts = async () => {
+    const response = await fetch("/api/prompt");
+    const data = await response.json();
+    setPosts(data);
+  };
 
   useEffect(() => {
-    const fetchPost = async () => {
-      const response = await fetch("/api/prompt");
-      const data = await response.json();
-      console.log(data)
-      setPosts(data);
-    };
-    fetchPost();
+    fetchPosts();
   }, []);
+
 
   return (
     <section className="feed">
@@ -47,7 +82,14 @@ const Feed = () => {
         />
       </from>
 
-      <PromptCardList data={posts} handleTagClick={() => {}} />
+      {searchText ? (
+        <PromptCardList
+          data={searchedResults}
+          handleTagClick={handleTagClick}
+        />
+      ) : (
+        <PromptCardList data={posts} handleTagClick={handleTagClick} />
+      )}
     </section>
   );
 };
