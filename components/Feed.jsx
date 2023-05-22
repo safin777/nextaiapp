@@ -1,9 +1,6 @@
 "use client";
-import React from "react";
 import { useState, useEffect } from "react";
-import { useSession } from "next-auth/react";
 import PromptCard from "./PromptCard";
-//import Prompt from "@models/prompt";
 
 const PromptCardList = ({ data, handleTagClick }) => {
   return (
@@ -22,18 +19,30 @@ const PromptCardList = ({ data, handleTagClick }) => {
 const Feed = () => {
   const [searchText, setSearchText] = useState("");
   const [posts, setPosts] = useState([]); // [{}
-  const [serchTimeOut, setSearchTimeOut] = useState(null);
-  const [searchedResults, setSearchedResults] = useState("");
+  const [searchTimeOut, setSearchTimeOut] = useState(null);
+  const [searchedResults, setSearchedResults] = useState([]);
+
+  const fetchPosts = async () => {
+    const response = await fetch("/api/prompt");
+    const data = await response.json();
+    setPosts(data);
+  };
+
+  useEffect(() => {
+    fetchPosts();
+  }, []);
 
   const handleSearchChange = (e) => {
-    clearTimeout(serchTimeOut);
+    //console.log(e.target.value)
+    clearTimeout(searchTimeOut);
     setSearchText(e.target.value);
+    let text = e.target.value;
 
     setSearchTimeOut(
       setTimeout(() => {
-        const searchResult = filterPrompts(e.target.value);
+        const searchResult = filterPrompts(text);
         setSearchedResults(searchResult);
-      }, 500)
+      }, 1000)
     );
   };
 
@@ -57,17 +66,6 @@ const Feed = () => {
     const searchResult = filterPrompts(tagName);
     setSearchedResults(searchResult);
   };
-  
-  const fetchPosts = async () => {
-    const response = await fetch("/api/prompt");
-    const data = await response.json();
-    setPosts(data);
-  };
-
-  useEffect(() => {
-    fetchPosts();
-  }, []);
-
 
   return (
     <section className="feed">
